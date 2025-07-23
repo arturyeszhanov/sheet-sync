@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Record;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class RecordController extends Controller
@@ -47,7 +48,9 @@ class RecordController extends Controller
     public function index()
     {
         $records = Record::all();
-        return view('records.index', compact('records'));
+        $sheetUrl = \App\Models\Setting::value('google_sheet_url');
+
+        return view('records.index', compact('records', 'sheetUrl'));
     }
 
     public function create()
