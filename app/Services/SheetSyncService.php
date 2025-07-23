@@ -38,11 +38,25 @@ class SheetSyncService
 
     public function exportAllowedRecords()
     {
+        // 1. Получаем записи со статусом Allowed
         $records = Record::allowed()->get();
 
-        $values = [];
-        $header = ['ID', 'Text', 'Status']; // +1 столбец комментариев будет уже в таблице
+        // 2. Загружаем текущие строки таблицы (для чтения комментариев)
+        $existing = $this->service->spreadsheets_values->get($this->spreadsheetId, 'A2:D'); // A2 - пропускаем заголовок
+        $rows = $existing->getValues() ?? [];
 
+        // 3. Собираем id => comment
+        $commentsMap = [];
+        foreach ($rows as $row) {
+            if (!isset($row[0])) continue;
+            $id = $row[0];
+            $comment = $row[3] ?? ''; // комментарий в 4-й колонке (D)
+            $commentsMap[$id] = $comment;
+        }
+
+        // 4. Формируем новые данные
+        $values = [];
+        $header = ['ID', 'Text', 'Status', 'Comment'];
         $values[] = $header;
 
         foreach ($records as $record) {
@@ -50,24 +64,31 @@ class SheetSyncService
                 $record->id,
                 $record->text,
                 $record->status,
+                $commentsMap[$record->id] ?? '', // сохраняем старый комментарий
             ];
         }
 
+        // 5. Обновляем Google Sheet
         $body = new Google_Service_Sheets_ValueRange([
-            'values' => $values
+            'values' => $values,
         ]);
 
-        $params = [
-            'valueInputOption' => 'RAW'
-        ];
+        $params = ['valueInputOption' => 'RAW'];
 
-        // Загружаем данные в таблицу начиная с A1
-        $range = 'A1';
         $this->service->spreadsheets_values->update(
             $this->spreadsheetId,
-            $range,
+            'A1',
             $body,
             $params
         );
     }
+
+    public function readSheet(): array
+    {
+        $spreadsheetId = $this->spreadsheetId;
+        $range = 'A:Z'; // читаем все строки и все столбцы от A до Z
+        $response = $this->service->spreadsheets_values->get($spreadsheetId, $range);
+        return $response->getValues(); // возвращаем данные
+    }
+
 }
