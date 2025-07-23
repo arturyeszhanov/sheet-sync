@@ -10,14 +10,13 @@ Route::get('/', [RecordController::class, 'index'])->name('index');
 // Специальные POST-маршруты
 Route::post('/generate', [RecordController::class, 'generate'])->name('generate');
 Route::post('/clear', [RecordController::class, 'clear'])->name('clear');
-Route::post('/setSheetUrl', [SettingController::class, 'update'])->name('setSheetUrl');
+Route::post('/setSheetUrl', [SettingController::class, 'updateSheetUrl'])->name('setSheetUrl');
+Route::delete('/sheet-url', [SettingController::class, 'deleteSheetUrl'])->name('deleteSheetUrl');
+
 
 // CRUD-маршруты
-Route::resource('/', RecordController::class, [
-    'except' => ['index'],
-    'as' => '',
-    'parameters' => ['' => 'record'],
-]);
+Route::resource('records', RecordController::class)->except(['index']);
+
 
 // Artisan-команда через веб
 Route::get('/fetch/{count?}', function ($count = null) {
