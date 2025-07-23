@@ -90,5 +90,6 @@ class RecordController extends Controller
         $record->delete();
         return redirect()->route('records.index')->with('success', 'Запись удалена.');
     }
+    
 }
 

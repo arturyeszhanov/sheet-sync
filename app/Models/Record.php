@@ -15,4 +15,10 @@ class Record extends Model
     ];
 
     // Для поля status, если оно enum, можно добавить scope, mutator и т.д.
+
+    public function scopeAllowed($query)
+    {
+        return $query->where('status', 'allowed'); // или любой другой фильтр, по твоей логике
+    }
+
 }
