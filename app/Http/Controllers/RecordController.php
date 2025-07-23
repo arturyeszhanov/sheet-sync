@@ -7,6 +7,43 @@ use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
+
+    public function generate()
+    {
+        $total = 1000;
+        $allowedCount = $total / 2;
+        $prohibitedCount = $total / 2;
+
+        // Очистим таблицу перед генерацией, если нужно
+        // Record::truncate();
+
+        // Генерируем Allowed
+        for ($i = 0; $i < $allowedCount; $i++) {
+            Record::create([
+                'text' => 'Generated allowed text ' . ($i + 1),
+                'status' => 'Allowed',
+            ]);
+        }
+
+        // Генерируем Prohibited
+        for ($i = 0; $i < $prohibitedCount; $i++) {
+            Record::create([
+                'text' => 'Generated prohibited text ' . ($i + 1),
+                'status' => 'Prohibited',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Успешно сгенерировано 1000 записей.');
+    }
+
+    public function clear()
+    {
+        Record::truncate();
+        return redirect()->back()->with('success', 'Все записи успешно удалены.');
+    }
+
+
+
     public function index()
     {
         $records = Record::all();
