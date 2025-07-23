@@ -15,9 +15,6 @@ class RecordController extends Controller
         $allowedCount = $total / 2;
         $prohibitedCount = $total / 2;
 
-        // Очистим таблицу перед генерацией, если нужно
-        // Record::truncate();
-
         // Генерируем Allowed
         for ($i = 0; $i < $allowedCount; $i++) {
             Record::create([
@@ -47,7 +44,7 @@ class RecordController extends Controller
 
     public function index()
     {
-        $records = Record::all();
+        $records = Record::paginate(50);
         $sheetUrl = \App\Models\Setting::value('google_sheet_url');
 
         return view('index', compact('records', 'sheetUrl'));

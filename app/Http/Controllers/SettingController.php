@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public function update(Request $request)
+    public function updateSheetUrl(Request $request)
     {
         $request->validate([
             'google_sheet_url' => 'required|url'
@@ -21,7 +21,20 @@ class SettingController extends Controller
         $setting->google_sheet_url = $request->google_sheet_url;
         $setting->save();
 
-        return redirect()->back()->with('success', 'Google Sheet URL updated successfully.');
+        return redirect()->back()->with('success', 'Ссылка на Google Таблицу успешно обновлена.');
     }
+
+    public function deleteSheetUrl(Request $request)
+    {
+        $setting = Setting::first();
+
+        if ($setting && $setting->google_sheet_url) {
+            $setting->google_sheet_url = null;
+            $setting->save();
+        }
+
+        return redirect()->back()->with('success', 'Ссылка успешно удалена.');
+    }
+
 }
 
