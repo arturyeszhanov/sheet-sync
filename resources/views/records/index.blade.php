@@ -1,41 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-        <h1 class="mb-4">Все записи</h1>
+<div class="container mt-5">
+    <h2 class="mb-4">Записи</h2>
 
-        <a href="{{ route('records.create') }}" class="btn btn-primary mb-3">Добавить</a>
+    {{-- Сообщения об успехе --}}
+    @include('records.partials.success')
+    
+    {{-- Кнопки действий --}}
+    @include('records.partials.actions')
+    
+    {{-- Форма ввода URL Google Sheets --}}
+    @include('records.partials.sheet_url_form')
+    
+    {{-- Таблица записей --}}
+    @include('records.partials.records_table')
+</div>
 
-        @if($records->isEmpty())
-            <div class="alert alert-warning">Нет записей.</div>
-        @else
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Текст</th>
-                        <th>Статус</th>
-                        <th>Действие</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($records as $record)
-                        <tr>
-                            <td>{{ $record->id }}</td>
-                            <td>{{ $record->text }}</td>
-                            <td>{{ $record->status }}</td>
-                            <td>
-                                <a href="{{ route('records.edit', $record->id) }}" class="btn btn-sm btn-warning">Редактировать</a>
-                                <form action="{{ route('records.destroy', $record->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Удалить?')">Удалить</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+{{-- Модальное окно: Добавить запись --}}
+    @include('records.partials.modals.add')
+
+{{-- Модальное окно: Редактировать запись --}}
+    @include('records.partials.modals.edit')
+
 @endsection
+
+{{-- JS для обработки кнопки Edit --}}
+@push('scripts')
+    @include('records.partials.scripts.edit_modal')
+@endpush
+
+
