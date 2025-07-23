@@ -30,7 +30,7 @@
                             Редактировать
                         </button>
 
-                        <form action="{{ route('records.destroy', $record->id) }}" method="POST" class="d-inline"
+                        <form action="{{ route('destroy', $record->id) }}" method="POST" class="d-inline"
                             onsubmit="return confirm('Delete this record?');">
                             @csrf
                             @method('DELETE')

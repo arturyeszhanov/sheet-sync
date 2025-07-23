@@ -15,7 +15,7 @@
             document.getElementById('edit-status').value = status;
             document.getElementById('edit-id').value = id;
 
-            editForm.action = `/records/${id}`;
+            editForm.action = `/${id}`;
         });
     });
 </script>
