@@ -30,8 +30,8 @@
                             Редактировать
                         </button>
 
-                        <form action="{{ route('destroy', $record->id) }}" method="POST" class="d-inline"
-                            onsubmit="return confirm('Delete this record?');">
+                        <form action="{{ route('records.destroy', $record->id) }}" method="POST" class="d-inline"
+                            onsubmit="return confirm('Удалить эту запись?');">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-sm btn-outline-danger">Удалить</button>
@@ -43,3 +43,7 @@
             @endforelse
         </tbody>
     </table>
+
+    @if ($records->hasPages())
+        {{ $records->links('pagination::bootstrap-5') }}
+    @endif

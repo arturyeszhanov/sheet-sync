@@ -1,6 +1,6 @@
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="{{ route('store') }}" method="POST" class="modal-content">
+        <form action="{{ route('records.store') }}" method="POST" class="modal-content">
             @csrf
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Добавить запись</h5>
