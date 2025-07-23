@@ -50,12 +50,12 @@ class RecordController extends Controller
         $records = Record::all();
         $sheetUrl = \App\Models\Setting::value('google_sheet_url');
 
-        return view('records.index', compact('records', 'sheetUrl'));
+        return view('index', compact('records', 'sheetUrl'));
     }
 
     public function create()
     {
-        return view('records.create');
+        return view('create');
     }
 
     public function store(Request $request)
@@ -66,12 +66,12 @@ class RecordController extends Controller
         ]);
 
         Record::create($validated);
-        return redirect()->route('records.index')->with('success', 'Запись добавлена.');
+        return redirect()->route('index')->with('success', 'Запись добавлена.');
     }
 
     public function edit(Record $record)
     {
-        return view('records.edit', compact('record'));
+        return view('edit', compact('record'));
     }
 
     public function update(Request $request, Record $record)
@@ -82,13 +82,13 @@ class RecordController extends Controller
         ]);
 
         $record->update($validated);
-        return redirect()->route('records.index')->with('success', 'Запись обновлена.');
+        return redirect()->route('index')->with('success', 'Запись обновлена.');
     }
 
     public function destroy(Record $record)
     {
         $record->delete();
-        return redirect()->route('records.index')->with('success', 'Запись удалена.');
+        return redirect()->route('index')->with('success', 'Запись удалена.');
     }
     
 }
