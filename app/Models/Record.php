@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Record extends Model
 {
 
-    // Разрешённые для массового заполнения поля
     protected $fillable = [
         'text',
         'status',
-        // другие поля, если есть
     ];
-
-    // Для поля status, если оно enum, можно добавить scope, mutator и т.д.
 
     public function scopeAllowed($query)
     {
-        return $query->where('status', 'allowed'); // или любой другой фильтр, по твоей логике
+        return $query->where('status', 'allowed');
+    }
+
+    public function index()
+    {
+        $records = Record::paginate(50); // по 50 записей на страницу
+        return view('records.index', compact('records'));
     }
 
 }

@@ -26,10 +26,9 @@ class SheetSyncService
 
         $this->service = new Google_Service_Sheets($this->client);
 
-        // Получаем ID таблицы из settings
         $setting = Setting::first();
         if (!$setting || !Str::contains($setting->google_sheet_url, '/d/')) {
-            throw new \Exception('Google Sheet URL is not set or invalid.');
+            throw new \Exception('Ссылка на Google Таблицу не указана или некорректна.');
         }
         
         $this->spreadsheetId = Str::between($setting->google_sheet_url, '/d/', '/');
@@ -38,23 +37,19 @@ class SheetSyncService
 
     public function exportAllowedRecords()
     {
-        // 1. Получаем записи со статусом Allowed
         $records = Record::allowed()->get();
 
-        // 2. Загружаем текущие строки таблицы (для чтения комментариев)
-        $existing = $this->service->spreadsheets_values->get($this->spreadsheetId, 'A2:D'); // A2 - пропускаем заголовок
+        $existing = $this->service->spreadsheets_values->get($this->spreadsheetId, 'A2:D');
         $rows = $existing->getValues() ?? [];
 
-        // 3. Собираем id => comment
         $commentsMap = [];
         foreach ($rows as $row) {
             if (!isset($row[0])) continue;
             $id = $row[0];
-            $comment = $row[3] ?? ''; // комментарий в 4-й колонке (D)
+            $comment = $row[3] ?? '';
             $commentsMap[$id] = $comment;
         }
 
-        // 4. Формируем новые данные
         $values = [];
         $header = ['ID', 'Text', 'Status', 'Comment'];
         $values[] = $header;
@@ -64,11 +59,10 @@ class SheetSyncService
                 $record->id,
                 $record->text,
                 $record->status,
-                $commentsMap[$record->id] ?? '', // сохраняем старый комментарий
+                $commentsMap[$record->id] ?? '',
             ];
         }
 
-        // 5. Обновляем Google Sheet
         $body = new Google_Service_Sheets_ValueRange([
             'values' => $values,
         ]);
@@ -86,9 +80,9 @@ class SheetSyncService
     public function readSheet(): array
     {
         $spreadsheetId = $this->spreadsheetId;
-        $range = 'A:Z'; // читаем все строки и все столбцы от A до Z
+        $range = 'A:Z';
         $response = $this->service->spreadsheets_values->get($spreadsheetId, $range);
-        return $response->getValues(); // возвращаем данные
+        return $response->getValues();
     }
 
 }
