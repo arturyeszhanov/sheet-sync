@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         \Log::info('✅ schedule() вызван в ' . now());
-        // Каждый раз в минуту
         $schedule->command('sheets:sync')->everyMinute()->evenInMaintenanceMode()->withoutOverlapping(false);
 
 

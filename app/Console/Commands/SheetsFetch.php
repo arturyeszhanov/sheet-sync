@@ -24,7 +24,7 @@ class SheetsFetch extends Command
         return;
     }
 
-    $dataRows = array_slice($rows, 1); // Пропускаем заголовки
+    $dataRows = array_slice($rows, 1);
     if ($count) {
         $dataRows = array_slice($dataRows, 0, $count);
     }
