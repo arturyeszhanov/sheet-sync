@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\SettingController;
+use Illuminate\Http\Request;
 
 // Главная страница — список записей
 Route::get('/', [RecordController::class, 'index'])->name('index');
