@@ -21,7 +21,8 @@ class SheetSyncService
         $this->client = new Google_Client();
         $this->client->setApplicationName('Sheet Sync Laravel');
         $this->client->setScopes([Google_Service_Sheets::SPREADSHEETS]);
-        $this->client->setAuthConfig(config('services.google.credentials_path'));
+        $json = json_decode(env('GOOGLE_CREDENTIALS_JSON'), true);
+        $this->client->setAuthConfig($json);
         $this->client->setAccessType('offline');
 
         $this->service = new Google_Service_Sheets($this->client);
