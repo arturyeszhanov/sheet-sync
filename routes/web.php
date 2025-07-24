@@ -32,3 +32,13 @@ Route::get('/fetch/{count?}', function ($count = null) {
 
     return response("<pre>$output</pre>");
 });
+
+Route::get('/cron/sync', function (Request $request) {
+    if ($request->query('key') !== env('CRON_SECRET')) {
+        abort(403, 'Access denied');
+    }
+
+    Artisan::call('sheets:sync');
+
+    return 'Google Sheet synced at ' . now();
+});
